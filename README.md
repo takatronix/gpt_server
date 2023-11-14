@@ -3,6 +3,23 @@
 whisper(or fast whisper)をつかって、高速に音声入力ができるchat gptサーバーと、ウェブクライアント　
 
 ## 実行方法
+
+### インストール
+CUDA設定などは各自で行ってください。
+```
+pip install torch==2.1.0+cu118 -f https://download.pytorch.org/whl/torch_stable.html
+pip install -r requirements.txt
+```
+
+
+### 設定
+config.jsonを編集してください。
+```
+"openai_api_key": "your openai api key"
+
+```
+
+
 ### サーバー
 ```python main.py```
 ### クライアント
