@@ -1,0 +1,210 @@
+.base,
+.base * {
+  box-sizing: border-box;
+}
+.base {
+  background: #000000;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+.footer {
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 10px;
+  height: 50px;
+  position: absolute;
+  right: 1px;
+  left: 0px;
+  bottom: 0px;
+  overflow: hidden;
+}
+.footer input[type="text"] {
+  flex-grow: 1; /* 入力フィールドが利用可能なスペースを全て埋めるようにする */
+  margin-right: 0px; /* 送信ボタンとの間隔 */
+  margin-left: 10px;
+  width : 100%;
+  height : 100%;
+  font-size: 18px;
+}
+/* フォーカス時の黒枠を消す */
+input[type="text"]:focus {
+  outline: none;
+}
+.upload-button {
+  opacity: 0.800000011920929;
+  position: absolute;
+  right: 2px;
+  bottom: 0px;
+  overflow: visible;
+}
+.chat {
+  background: rgba(180, 91, 91, 0.3);
+  position: absolute;
+  right: 0px;
+  left: 0px;
+  bottom: 50px;
+  top: 71px;
+  overflow: auto;
+  color: white;
+}
+.speech-bubble {
+  color: #000000;
+  position: relative;
+  background: #f0f0f0;
+  border-radius: .4em;
+  padding: 10px;
+  max-width: 100%;  /* 最大幅を設定 */
+  min-width: 100px;  /* 最小幅を設定 */
+
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-bottom: 4px;
+
+}
+
+.speech-bubble:after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  margin-top: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent transparent #f0f0f0;
+}
+
+.result-bubble {
+  color: #000000;
+  font-weight: bold;
+  position: relative;
+  background: #f0f0f0;
+  border-radius: .4em;
+  padding: 10px;
+  max-width: 100%;  /* 最大幅を設定 */
+  min-width: 100px;  /* 最小幅を設定 */
+
+  margin-left: 4px;
+  margin-right: 20px;
+  margin-bottom: 4px;
+}
+
+.result-bubble:after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  margin-top: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent transparent #f0f0f0;
+}
+
+
+
+.header {
+  background: rgba(203, 212, 255, 0.9);
+  opacity: 0.800000011920929;
+  height: 70px;
+  position: absolute;
+  right: 0px;
+  left: 0px;
+  top: 0px;
+  overflow: hidden;
+}
+.burger-button {
+  position: absolute;
+  right: 13px;
+  top: 6px;
+  overflow: visible;
+}
+.volume {
+  background: #191919;
+  height: 12px;
+  position: absolute;
+  right: 0px;
+  left: 0px;
+  bottom: 0px;
+  overflow: hidden;
+}
+.level {
+  background: #000000;
+  position: absolute;
+  right: 1px;
+  left: 0px;
+  bottom: -1px;
+  top: -1px;
+  color: white;
+  font-size: 12px;
+}
+
+.speaker {
+  position: absolute;
+  left: 76px;
+  top: 6px;
+  overflow: visible;
+}
+.mic {
+  width: 44px;
+  height: 44px;
+  position: absolute;
+  left: 14px;
+  top: 6px;
+  overflow: hidden;
+}
+.group {
+  position: absolute;
+  left: 5.5px;
+  top: 0px;
+  overflow: visible;
+}
+.chat-button {
+  position: absolute;
+  left: 139px;
+  top: 6px;
+  overflow: visible;
+}
+.setting {
+  background: #ffffff;
+  position: absolute;
+  right: 0px;
+  left: 1px;
+  bottom: 0px;
+  top: 70px;
+  overflow: hidden;
+  visibility: hidden;
+}
+.api-key {
+  color: #000000;
+  text-align: left;
+  font: 400 12px "Inter", sans-serif;
+  position: absolute;
+  left: 21px;
+  top: 26px;
+  width: 262px;
+  height: 24px;
+}
+.aaaaaaaaaaaaaaaaaaaaa {
+  color: #000000;
+  text-align: left;
+  font: 400 12px "Inter", sans-serif;
+  position: absolute;
+  left: 22px;
+  top: 55px;
+  width: 320px;
+  height: 24px;
+}
+#video {
+  width: 640px;
+  height: 480px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  cursor: move;
+}
+#videoControls {
+    position: absolute;
+    top: 10px; /* ビデオの上端からの位置 */
+    left: 10px; /* ビデオの左端からの位置 */
+    z-index: 1001; /* ビデオより上に表示 */
+}

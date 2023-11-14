@@ -1,0 +1,26 @@
+{
+    "device": "cuda",
+
+    "recognizer": "whisper",
+    "whisper_model": "large-v3",
+    "faster_whisper_model": "large-v2",
+    "whisper_target_lang": "ja",
+    "faster-whisper_target_lang": "ja",
+
+
+    "openai_api_key": "openai_api_key",
+
+    "translator": "deepl",
+    "deepl_api_key": "deepl_api_key",
+    "translation_target_lang": "ja",
+    "translation_source_lang": "en",
+
+    "server_ip": "localhost",
+    "port_no": 9090,
+    "server_path": "/gpt",
+
+    "use_ssl": false,
+    "ssl_cert": "/path/to/cert.pem",
+    "ssl_key": "/path/to/privkey.pem"
+}
+

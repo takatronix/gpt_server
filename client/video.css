@@ -1,0 +1,38 @@
+
+#videoContainer {
+    position: relative;
+    width: 640px;
+    height: 480px;
+    background: #333;
+}
+
+#video {
+    width: 100%;
+    height: 100%;
+    background: #000;
+}
+
+#videoControls {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+#resizeHandle {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: red;
+    cursor: nwse-resize;
+    z-index: 2;
+}

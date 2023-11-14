@@ -1,0 +1,18 @@
+{
+    "openai": {
+        "type": "openai",
+        "model": "tts-1",
+        "voice": "alloy"
+    },
+    "openai-hd": {
+        "type": "openai",
+        "model": "tts-1-hd",
+        "voice": "alloy"
+    },
+    "voicebox": {
+        "type": "voicevox",
+        "speaker": 0,
+        "host": "localhost",
+        "port": 50021
+    }
+}
