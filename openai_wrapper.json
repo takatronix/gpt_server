@@ -11,29 +11,41 @@
     },
     "gpt-3.5-turbo": {
         "engine": "gpt-3.5-turbo",
+        "max_history": 100,
         "max_tokens": 200,
         "temperature": 0.5
     },
     "gpt4-turbo": {
         "engine": "gpt-4-1106-preview",
+        "max_history": 100,
         "max_tokens": 200,
         "temperature": 0.5
     },
     "gpt4v": {
         "engine": "gpt-4-vision-preview",
+        "max_history": 100,
         "max_tokens": 200,
         "temperature": 0.5
     },
     "gpt4test": {
         "engine": "gpt-4-1106-preview",
+        "max_history": 100,
         "max_tokens": 200,
         "temperature": 0.5,
         "custom_instructions": "簡潔に応えてください"
     },
     "test": {
-        "engine": "gpt-4-1106-preview",
+        "engine": "gpt-3.5-turbo",
+        "max_history": 100,
         "max_tokens": 200,
         "temperature": 0.5,
         "custom_instructions": "音声出力用に120文字以内で短く回答して。音声認識をつかっているため間違った日本語は推測してください。"
+    },
+        "translator": {
+        "engine": "gpt-3.5-turbo",
+        "max_history": 20,
+        "max_tokens": 200,
+        "temperature": 0.1,
+        "custom_instructions": "通訳になってください。以下は日本語以外は英語に、日本語は英語にしてください."
     }
 }

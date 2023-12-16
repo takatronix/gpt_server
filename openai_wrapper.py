@@ -36,21 +36,28 @@ class OpenAIWrapper:
 
             # メッセージのリストを初期化
             messages = []
-
-            # 会話の履歴を追加
-            for history_message in self.history:
-                role, text = history_message.split(': ', 1)
-                messages.append({"role": role, "content": text})
-
-
-            # 現在のユーザーの入力を追加
-            messages.append({"role": "user", "content": prompt})
-
+            recent_history = []
             # configにカスタム指示が存在する場合、それをメッセージに追加
             if "custom_instructions" in config and config["custom_instructions"]:
                 messages.append({"role": "system", "content": config["custom_instructions"]})
 
-            print(messages)
+            # 会話の履歴を追加
+
+            # 最新のmax_history個のメッセージを追加
+            if len(self.history) > config["max_history"]:
+                recent_history = self.history[-config["max_history"]:]
+            else:
+                recent_history = self.history
+
+            for history_message in recent_history:
+                role, text = history_message.split(': ', 1)
+                messages.append({"role": role, "content": text})
+
+            # 現在のユーザーの入力を追加
+            messages.append({"role": "user", "content": prompt})
+
+
+            #print(messages)
             start_time = time.time()
             # APIリクエストを送信
             response = self.client.chat.completions.create(
