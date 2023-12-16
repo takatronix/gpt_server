@@ -15,10 +15,10 @@ recognizer = SpeechRecognizer(config, config.recognizer)
 synthesizer = VoiceSynthesizer(config, config.voice_synthesizer)
 ai = OpenAIWrapper(config.openai_api_key)
 
-send_audio = False
-
 
 class DataHandler:
+    send_audio = False
+
     def __init__(self, websocket: WebSocket):
         self.websocket = websocket
 
@@ -42,7 +42,7 @@ class DataHandler:
                 ai.add_history("system", result)
 
             filepath = ""
-            if send_audio:
+            if self.send_audio:
                 # 音声データを作成
                 filepath = await self.text_to_audio(result)
                 # 音声データを送信
@@ -68,8 +68,8 @@ class DataHandler:
         lapse_time = round(lapse_time.total_seconds(), 2)
 
         # 処理時間を表示
-        # time_text = "wav作成:" + synthesizer.config.voice_synthesizer + " (" + str(lapse_time) + "秒)"
-        # await self.send_text(time_text)
+        time_text = "wav作成:" + synthesizer.config.voice_synthesizer + " (" + str(lapse_time) + "秒)"
+        await self.send_text(time_text)
         return filepath
 
     async def handle_text(self, text: str):
@@ -91,9 +91,9 @@ class DataHandler:
         # jsonから "speaker" : true があれば、音声データを作成
         if "speaker" in data:
             if data["speaker"]:
-                send_audio = True
+                self.send_audio = True
             else:
-                send_audio = False
+                self.send_audio = False
         await self.send_text(response)
 
     async def handle_image(self, image_data: bytes):
