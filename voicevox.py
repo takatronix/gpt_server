@@ -5,7 +5,6 @@ import wave
 import pyaudio
 import requests
 
-
 class Voicevox:
     def __init__(self, host="127.0.0.1", port=50021):
         self.host = host
@@ -17,26 +16,30 @@ class Voicevox:
             ("speaker", 47)  # 音声の種類をInt型で指定
         )
 
-        init_q = requests.post(
-            f"http://{self.host}:{self.port}/audio_query",
+        # 音声合成用のクエリ作成
+        query = requests.post(
+            f'http://{self.host}:{self.port}/audio_query',
             params=params
         )
 
-        res = requests.post(
-            f"http://{self.host}:{self.port}/synthesis",
+        # 音声合成を実施
+        result = requests.post(
+            f'http://{self.host}:{self.port}/synthesis',
             headers={"Content-Type": "application/json"},
             params=params,
-            data=json.dumps(init_q.json())
+            data=json.dumps(query.json())
         )
 
-        # メモリ上で展開
-        audio = io.BytesIO(res.content)
+        if result.status_code != 200:
+            print("Error: " + result.status_code)
+            print(result.json())
+            return
 
-        with wave.open(filename, 'wb') as f:
-            f.setnchannels(1)
-            f.setsampwidth(2)
-            f.setframerate(24000)
-            f.writeframes(audio.read())
+        # wavファイルとして保存
+        with open(filename, 'wb') as f:
+            f.write(result.content)
+
+
 
     def speak(self, text=None, speaker=47):  # VOICEVOX:ナースロボ＿タイプＴ
 

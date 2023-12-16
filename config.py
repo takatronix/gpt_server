@@ -1,36 +1,30 @@
-import json
-
-
 class Config:
-    def __init__(self, config_file):
-        with open(config_file, 'r') as file:
-            config_data = json.load(file)
+    # サーバー設定
+    host = "localhost"
+    port = 9090  # サーバーのポート
+    use_ssl = False  # SSLを使用するかどうか
 
-        self.device = config_data.get('device')
-        self.openai_api_key = config_data.get('openai_api_key')
+    # SSL設定
+    ssl_certfile = "/path/to/certfile.crt"  # SSL証明書のパス
+    ssl_keyfile = "/path/to/keyfile.key"  # SSLキーファイルのパス
 
-        self.recognizer = config_data.get('recognizer')
-        self.whisper_model = config_data.get('whisper_model')
-        self.faster_whisper_model = config_data.get('faster_whisper_model')
-        self.whisper_target_lang = config_data.get('whisper_target_lang')
-        self.faster_whisper_target_lang = config_data.get('faster_whisper_target_lang')
+    # その他の設定
+    device = "cuda"  # 使用するデバイス
+    openai_api_key = "api key"
 
-        self.translator = config_data.get('translator')
-        self.deepl_api_key = config_data.get('deepl_api_key')
-        self.translation_target_lang = config_data.get('translation_target_lang')
-        self.translation_source_lang = config_data.get('translation_source_lang')
+    ai_key = "test"  # 使用するAIの種類
 
-        self.use_ssl = config_data.get('use_ssl')
-        self.ssl_cert = config_data.get('ssl_cert')
-        self.ssl_key = config_data.get('ssl_key')
-        self.server_ip = config_data.get('server_ip')
-        self.port_no = config_data.get('port_no')
-        self.server_path = config_data.get('server_path')
 
-    def __str__(self):
-        return (f"Config(device='{self.device}', recognizer='{self.recognizer}', "
-                f"whisper_model='{self.whisper_model}', faster_whisper_model='{self.faster_whisper_model}', "
-                f"translator='{self.translator}', deepl_api_key='{self.deepl_api_key}', "
-                f"translation_target_lang='{self.translation_target_lang}', translation_source_lang='{self.translation_source_lang}',"
-                f"use_ssl={self.use_ssl}, ssl_cert='{self.ssl_cert}', ssl_key='{self.ssl_key}', "
-                f"server_ip='{self.server_ip}', port_no={self.port_no}, server_path='{self.server_path}')")
+    # その他の設定項目を追加...
+
+    #voice_synthesizer = "voicevox"
+    voice_synthesizer = "openai"
+
+    # 音声認識器の設定
+    recognizer = "faster-whisper"
+    # whisperのモデル
+    whisper_model = "large-v3"
+    whisper_target_lang = "ja-JP"
+    # faster-whisperのモデル
+    faster_whisper_model = "flyingleafe/faster-whisper-large-v3"
+    faster_whisper_target_language = "ja"

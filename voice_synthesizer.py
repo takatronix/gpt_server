@@ -6,6 +6,24 @@ from pydub.playback import play
 import os
 
 
+def play_audio(file_path):
+    # ファイルの拡張子を取得
+    file_ext = os.path.splitext(file_path)[1].lower()
+
+    # 拡張子に基づいて適切なフォーマットで読み込む
+    if file_ext == '.mp3':
+        audio = AudioSegment.from_mp3(file_path)
+    elif file_ext == '.flac':
+        audio = AudioSegment.from_file(file_path, "flac")
+    elif file_ext == '.wav':
+        audio = AudioSegment.from_wav(file_path)
+    else:
+        raise Exception("Unsupported file format")
+
+    # オーディオを再生
+    play(audio)
+
+
 class VoiceSynthesizer:
     def __init__(self, config, name, config_file="voice_synthesizer.json"):
         self.openai = None
@@ -29,25 +47,9 @@ class VoiceSynthesizer:
     def synthesize(self, text, filename):
         if self.synth_type == "openai":
             self.openai.synthesize(text, filename, self.profile["model"], self.profile["voice"])
-        elif self.synth_type == "voicebox":
-            voicevox = Voicevox(self.profie["host"], self.profile["port"])
+        elif self.synth_type == "voicevox":
+            host = self.profile["host"]
+            port = self.profile["port"]
+            voicevox = Voicevox(host,port)
             voicevox.synthesize(text, filename)
 
-        self.play_audio(filename)
-
-    def play_audio(self,file_path):
-        # ファイルの拡張子を取得
-        file_ext = os.path.splitext(file_path)[1].lower()
-
-        # 拡張子に基づいて適切なフォーマットで読み込む
-        if file_ext == '.mp3':
-            audio = AudioSegment.from_mp3(file_path)
-        elif file_ext == '.flac':
-            audio = AudioSegment.from_file(file_path, "flac")
-        elif file_ext == '.wav':
-            audio = AudioSegment.from_wav(file_path)
-        else:
-            raise Exception("Unsupported file format")
-
-        # オーディオを再生
-        play(audio)

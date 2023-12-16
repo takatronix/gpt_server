@@ -1,7 +1,3 @@
-MEDIA_TYPE_JSON = 0x00
-MEDIA_TYPE_AUDIO = 0x01
-MEDIA_TYPE_IMAGE = 0x02
-
 // config.jsonから設定を読み込む
 let url = '';
 let useSSL = true;
@@ -34,7 +30,7 @@ let mediaStream; // グローバルスコープに追加
 // 録音を開始するボリュームレベル
 var startThreshold = 20; // 録音を開始するボリュームレベル
 var stopThreshold = 35; //　録音を停止するボリュームレベル
-let silenceTime = 200; // 静けさが続くべきミリ秒数
+let silenceTime = 500; // 静けさが続くべきミリ秒数
 let recording = false;
 let stopStartTime = null;
 let recordStartTime = null;
@@ -83,74 +79,36 @@ function setupWebSocket() {
         message("WebSocket is open now.");
     };
 
+    let currentDataType = null;
     //  メッセージ受信
     socket.onmessage =  function (event) {
-        console.log("Message from server:" + event.data);
 
-           var audioData = event.data;
-/*
-        const arrayBuffer =  event.data.arrayBuffer();
-        const dataView = new DataView(arrayBuffer);
-
-        // 先頭の1バイトを読み取る
-        const mediaType = dataView.getUint8(0);
-        // dataに先頭の1バイトを除いた残りのデータを格納
-
- */
-        const data = audioData.slice(1);
-
-        if (event.data instanceof Blob) {
-                // AudioContextを使用してオーディオデータをデコード
-                audioCtx.decodeAudioData(audioData, function (buffer) {
-                    // AudioBufferSourceNodeの作成
-                    var source = audioCtx.createBufferSource();
-                    source.buffer = buffer;
-                    source.connect(audioCtx.destination);
-                    source.start(0);
-                }, function (e) {
-                    console.log("Error with decoding audio data" + e.err);
-                });
-
-                return;
-        }
-        /*
-        // event.dataがBlobオブジェクトであることを確認
-        if (event.data instanceof Blob) {
-
-
-            try {
-                // BlobをArrayBufferに変換
-                const arrayBuffer =  event.data.arrayBuffer();
-                const dataView = new DataView(arrayBuffer);
-
-                // 先頭の1バイトを読み取る
-                const mediaType = dataView.getUint8(0);
-                // dataに先頭の1バイトを除いた残りのデータを格納
-                const data = arrayBuffer.slice(1);
-
-                console.log("Media type:", mediaType);
-
-
-                if (mediaType === MEDIA_TYPE_AUDIO && isSpeakerOn){
-
-
-                    audioCtx.decodeAudioData(data, function (buffer) {
-                        var source = audioCtx.createBufferSource();
-                        source.buffer = buffer;
-                        source.connect(audioCtx.destination);
-                        source.start(0);
-                    }, function (e) {
-                        console.error("Error with decoding audio data: " + e.err);
-                    });
-                }
-            } catch (error) {
-                message("Error: " + error)
+        if (currentDataType === null) {
+            // 最初のメッセージはデータタイプ
+            currentDataType = event.data;
+        } else {
+            // 次のメッセージは実際のデータ
+            switch (currentDataType) {
+                case 'text':
+                    handleTextMessage(event.data);
+                    break;
+                case 'message':
+                    bubble_message(event.data);
+                    break;
+                case 'json':
+                    handleJSONMessage(JSON.parse(event.data));
+                    break;
+                case 'image':
+                    handleImageMessage(event.data);
+                    break;
+                case 'audio':
+                    handleAudioMessage(event.data);
+                    break;
+                default:
+                    console.error("Unknown data type:", currentDataType);
             }
-            return;
+            currentDataType = null; // 次のメッセージのためにリセット
         }
-*/
-
-        addMessage(event.data, 'result-bubble');
     };
 
     socket.onclose = function(event) {
@@ -160,16 +118,87 @@ function setupWebSocket() {
     socket.onerror = function(event) {
         error_message("WebSocket error observed.");
     };
+
+    function handleTextMessage(data) {
+        console.log("Text data:", data);
+        // テキストデータの処理
+        message(data)
+    }
+
+    function handleJSONMessage(data) {
+        console.log("JSON data:", data);
+        message(data.text)
+        // JSONデータの処理
+    }
+
+    function handleImageMessage(data) {
+        console.log("Image data received");
+        message("画像データを受信しました")
+    }
+
+    function handleAudioMessage(data) {
+        console.log("Audio data received");
+        //message("音声データを受信しました バイト数:" + data.size)
+
+        const audioBlob = new Blob([data], { type: 'audio/wav' });
+
+        // BlobからオーディオURLを作成
+        const audioUrl = URL.createObjectURL(audioBlob);
+
+        // オーディオを再生
+        const audio = new Audio(audioUrl);
+
+        // オーディオの再生中は、録音しない
+        audio.onplaying = function() {
+            isMicOn = false;
+        };
+        // オーディオの再生終了時にボタンを有効化
+        audio.onended = function() {
+            isMicOn = true;
+        };
+        if(isSpeakerOn){
+            audio.play();
+        }
+    }
 }
 
-function sendData(data) {
-
+function sendText(message) {
     if (socket && socket.readyState === WebSocket.OPEN) {
-        socket.send(data);
+        // messageをjsonに変換
+        socket.send("text");
+        socket.send(message);
     } else {
         console.error("WebSocket is not open. Data not sent.");
     }
+}
+function sendMessage(message) {
+    if (socket && socket.readyState === WebSocket.OPEN) {
+        socket.send("message");
+        socket.send(message);
+    } else {
+        console.error("WebSocket is not open. Data not sent.");
+    }
+}
 
+function sendJSON(data) {
+    if (socket && socket.readyState === WebSocket.OPEN) {
+        // データタイプを送信
+        socket.send("message");
+        // JSONデータを送信
+        socket.send(JSON.stringify(data));
+    } else {
+        console.error("WebSocket is not open. JSON data not sent.");
+    }
+}
+function sendBinaryData(binaryData, dataType) {
+    if (socket && socket.readyState === WebSocket.OPEN) {
+        // データタイプを送信
+        socket.send(dataType);
+        // バイナリデータを送信
+        socket.send(binaryData);
+    } else {
+        console.error("WebSocket is not open. Data not sent.");
+    }
 }
 
 let audioContext, analyser, microphone, javascriptNode;
@@ -339,19 +368,10 @@ function initializeMediaRecorder(stream) {
 
     // audioBlobからArrayBufferを取得
     audioBlob.arrayBuffer().then(arrayBuffer => {
-        // 1バイトの0x02を追加するためのUint8Arrayを作成
-        let audioDataWithHeader = new Uint8Array(arrayBuffer.byteLength + 1);
-        audioDataWithHeader[0] = MEDIA_TYPE_AUDIO; // 1バイト目に0x01を追加(音声)
-
-        // 残りの部分にaudioBlobのデータをコピー
-        audioDataWithHeader.set(new Uint8Array(arrayBuffer), 1);
-
-        // 新しいBlobを作成
-        let newAudioBlob = new Blob([audioDataWithHeader], { type: 'audio/wav' });
-
         // データの送信
         if(isMicOn){
-            sendData(newAudioBlob);
+            let newAudioBlob = new Blob([arrayBuffer], { type: 'audio/wav' });
+            sendBinaryData(newAudioBlob,"audio");
         }
     });
         audioChunks = [];
@@ -385,7 +405,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     let volumeLevel = document.getElementById('volume-level');
     volumeLevel.style.backgroundColor = 'black';
 
-    set_speaker(false);
+    set_speaker(true);
 });
 
 function on_enter_message(){
@@ -404,7 +424,7 @@ function on_enter_message(){
     }
 
     bubble_message(text);
-    sendData(text);
+    sendMessage(text);
 }
 
 
@@ -420,6 +440,7 @@ function on_mic_button_click() {
         isMicOn = true;
     }
 }
+
 function on_speaker_button_click() {
     const speakerButton = document.getElementById('speaker-button');
     if(isSpeakerOn){

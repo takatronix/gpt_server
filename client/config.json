@@ -1,4 +1,4 @@
 {
-  "url": "localhost:9090/gpt",
+  "url": "localhost:9090/ws",
   "useSSL": false
 }

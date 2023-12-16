@@ -1,4 +1,6 @@
 import json
+import time
+
 import requests
 import uuid
 from openai import OpenAI
@@ -12,6 +14,14 @@ class OpenAIWrapper:
         self.client.api_key = self.api_key
         self.load_config()
         self.session_id = str(uuid.uuid4())  # セッションIDを生成
+        self.history = []
+
+    def add_history(self, speaker, text, time=None):
+        self.history.append(f"{speaker}: {text}")
+
+        # セッションIDのhistoryファイルに追記
+        with open(f"history/{self.session_id}.txt", "a", encoding="utf-8") as file:
+            file.write(f"{speaker}: {text}\n")
 
     def load_config(self):
         try:
@@ -20,20 +30,28 @@ class OpenAIWrapper:
         except Exception as e:
             raise Exception(f"Error loading configuration: {str(e)}")
 
-    def query(self, prompt, config_name):
+    async def query(self, prompt, config_name):
         try:
             config = self.config[config_name]
 
             # メッセージのリストを初期化
             messages = []
 
-            # configにカスタム指示が存在する場合、それをメッセージに追加
-            if "custom_instructions" in config and config["custom_instructions"]:
-                custom_instructions = config["custom_instructions"]
-                messages.append({"role": "system", "content": custom_instructions})
-            # プロンプトをユーザーメッセージとして追加
+            # 会話の履歴を追加
+            for history_message in self.history:
+                role, text = history_message.split(': ', 1)
+                messages.append({"role": role, "content": text})
+
+
+            # 現在のユーザーの入力を追加
             messages.append({"role": "user", "content": prompt})
 
+            # configにカスタム指示が存在する場合、それをメッセージに追加
+            if "custom_instructions" in config and config["custom_instructions"]:
+                messages.append({"role": "system", "content": config["custom_instructions"]})
+
+            print(messages)
+            start_time = time.time()
             # APIリクエストを送信
             response = self.client.chat.completions.create(
                 model=config["engine"],
@@ -41,12 +59,14 @@ class OpenAIWrapper:
                 max_tokens=config["max_tokens"],
                 temperature=config["temperature"],
             )
+            lapse_time = time.time() - start_time
+            lapse_time = round(lapse_time, 2)
             token = response.usage.total_tokens
 
             # 応答を返す
-            return response.choices[0].message.content + f"({token} tokens)"
+            return response.choices[0].message.content, token, lapse_time
         except Exception as e:
-            return str(e)
+            return str(e), 0, 0
 
     # (alloy, echo, fable, onyx, nova, shimmer)
 
@@ -82,4 +102,3 @@ class OpenAIWrapper:
         )
 
         response.stream_to_file(speech_file_path)
-

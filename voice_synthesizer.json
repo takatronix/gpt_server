@@ -9,7 +9,7 @@
         "model": "tts-1-hd",
         "voice": "alloy"
     },
-    "voicebox": {
+    "voicevox": {
         "type": "voicevox",
         "speaker": 0,
         "host": "localhost",
