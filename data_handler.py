@@ -21,6 +21,7 @@ class DataHandler:
 
     def __init__(self, websocket: WebSocket):
         self.websocket = websocket
+        self.send_audio = False
 
     # テキストデータの処理
     async def text_proc(self, text: str):
