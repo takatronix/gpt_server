@@ -151,13 +151,16 @@ function setupWebSocket() {
         // オーディオの再生中は、録音しない
         audio.onplaying = function() {
             isMicOn = false;
+            set_mic_ui(false)
         };
         // オーディオの再生終了時にボタンを有効化
         audio.onended = function() {
             isMicOn = true;
+            set_mic_ui(true)
         };
         if(isSpeakerOn){
             audio.play();
+
         }
     }
 }
@@ -317,24 +320,7 @@ function loadSilenceThreshold(){
     }
 }
 
-/*
-// 保存ボタンがクリックされたときに静寂時間を保存する
-document.getElementById('save-silence-time').addEventListener('click', function() {
-    const inputVal = document.getElementById('silence-time-input').value;
-    silenceTime = parseInt(inputVal, 10);
-    // ローカルストレージに値を保存する
-    localStorage.setItem('silenceTime', silenceTime);
-    log_message('静寂時間が保存されました: ' + silenceTime + 'ミリ秒');
 
-    // silenceThresholdの保存
-    const inputVal2 = document.getElementById('recording-level-slider').value;
-    startThreshold = parseInt(inputVal2, 10);
-    // ローカルストレージに値を保存する
-    localStorage.setItem('silenceThreshold', startThreshold);
-    log_message('静寂閾値が保存されました: ' + startThreshold);
-
-});
-*/
 
 function clear_messages(){
     document.getElementById('messages').innerHTML = '';
@@ -370,6 +356,9 @@ function initializeMediaRecorder(stream) {
     audioBlob.arrayBuffer().then(arrayBuffer => {
         // データの送信
         if(isMicOn){
+            isMicOn = false;
+            set_mic_ui(false)
+
             let newAudioBlob = new Blob([arrayBuffer], { type: 'audio/wav' });
             sendBinaryData(newAudioBlob,"audio");
         }

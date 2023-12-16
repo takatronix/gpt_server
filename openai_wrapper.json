@@ -34,6 +34,6 @@
         "engine": "gpt-4-1106-preview",
         "max_tokens": 200,
         "temperature": 0.5,
-        "custom_instructions": "音声出力用に短く回答して。音声認識をつかっているため間違った日本語は推測してください。"
+        "custom_instructions": "音声出力用に120文字以内で短く回答して。音声認識をつかっているため間違った日本語は推測してください。"
     }
 }
