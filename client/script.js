@@ -14,10 +14,12 @@ fetch('config.json')
     })
     .catch(error => console.error('Error loading config:', error));
 
+// オーディオを再生
+var audio = new Audio();
 
 var averageVolume = 0;
 var isMicOn = false;
-var isSpeakerOn= false;
+var isSpeakerOn= true;
 var isChatOn = false;
 var isBurgerOn = false;
 
@@ -37,7 +39,6 @@ let recordStartTime = null;
 // 最低録音時間
 const MIN_RECORDING_TIME = 2500;
 
-var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
 function startRecording() {
     // 切断してたら再接続
@@ -140,27 +141,28 @@ function setupWebSocket() {
         console.log("Audio data received");
         //message("音声データを受信しました バイト数:" + data.size)
 
-        const audioBlob = new Blob([data], { type: 'audio/wav' });
 
-        // BlobからオーディオURLを作成
-        const audioUrl = URL.createObjectURL(audioBlob);
+        try{
+            const audioBlob = new Blob([data], { type: 'audio/wav' });
 
-        // オーディオを再生
-        const audio = new Audio(audioUrl);
+            // BlobからオーディオURLを作成
+            // オーディオを再生
+            audio.src = URL.createObjectURL(audioBlob);
 
-        // オーディオの再生中は、録音しない
-        audio.onplaying = function() {
-            isMicOn = false;
-            set_mic_ui(false)
-        };
-        // オーディオの再生終了時にボタンを有効化
-        audio.onended = function() {
-            isMicOn = true;
-            set_mic_ui(true)
-        };
-        if(isSpeakerOn){
-            audio.play();
+            // オーディオの再生中は、録音しない
+            audio.onplaying = function() {
+                set_mic_ui(false)
+            };
+            // オーディオの再生終了時にボタンを有効化
+            audio.onended = function() {
+                set_mic_ui(true)
+            };
+            if(isSpeakerOn){
+                audio.play();
+            }
 
+        }catch (e){
+            error_message("音声データの再生に失敗しました" + e)
         }
     }
 }
@@ -356,8 +358,6 @@ function initializeMediaRecorder(stream) {
     audioBlob.arrayBuffer().then(arrayBuffer => {
         // データの送信
         if(isMicOn){
-            isMicOn = false;
-            set_mic_ui(false)
 
             let newAudioBlob = new Blob([arrayBuffer], { type: 'audio/wav' });
             sendBinaryData(newAudioBlob,"audio");
@@ -394,7 +394,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
     let volumeLevel = document.getElementById('volume-level');
     volumeLevel.style.backgroundColor = 'black';
 
-    set_speaker(true);
+    set_speaker(false)
+
 });
 
 function on_enter_message(){
@@ -433,6 +434,7 @@ function on_mic_button_click() {
 function on_speaker_button_click() {
     const speakerButton = document.getElementById('speaker-button');
     if(isSpeakerOn){
+        audio.play();
         set_speaker(false);
     }
     else{

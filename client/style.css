@@ -60,6 +60,9 @@ input[type="text"]:focus {
   margin-right: 10px;
   margin-bottom: 4px;
 
+  font-weight: bold;
+  font-family: Arial, sans-serif;
+    font-size: 16px;
 }
 
 .speech-bubble:after {
@@ -183,16 +186,7 @@ input[type="text"]:focus {
   width: 262px;
   height: 24px;
 }
-.aaaaaaaaaaaaaaaaaaaaa {
-  color: #000000;
-  text-align: left;
-  font: 400 12px "Inter", sans-serif;
-  position: absolute;
-  left: 22px;
-  top: 55px;
-  width: 320px;
-  height: 24px;
-}
+
 #video {
   width: 640px;
   height: 480px;

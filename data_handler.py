@@ -46,7 +46,7 @@ class DataHandler:
                     await self.send_audio(file.read())
 
                 # 音声データを削除
-                os.remove(filepath)
+                #os.remove(filepath)
 
         except Exception as e:
             print(e)
