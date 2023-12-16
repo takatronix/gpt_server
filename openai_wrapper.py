@@ -37,11 +37,12 @@ class OpenAIWrapper:
             # メッセージのリストを初期化
             messages = []
             recent_history = []
+
+            # 会話の履歴を追加
+
             # configにカスタム指示が存在する場合、それをメッセージに追加
             if "custom_instructions" in config and config["custom_instructions"]:
                 messages.append({"role": "system", "content": config["custom_instructions"]})
-
-            # 会話の履歴を追加
 
             # 最新のmax_history個のメッセージを追加
             if len(self.history) > config["max_history"]:
@@ -52,6 +53,7 @@ class OpenAIWrapper:
             for history_message in recent_history:
                 role, text = history_message.split(': ', 1)
                 messages.append({"role": role, "content": text})
+
 
             # 現在のユーザーの入力を追加
             messages.append({"role": "user", "content": prompt})

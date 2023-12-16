@@ -43,9 +43,9 @@
     },
         "translator": {
         "engine": "gpt-3.5-turbo",
-        "max_history": 20,
+        "max_history": 1,
         "max_tokens": 200,
         "temperature": 0.1,
-        "custom_instructions": "通訳になってください。以下は日本語以外は英語に、日本語は英語にしてください."
+        "custom_instructions": "通訳になってください。私が話すメッセージを日本語に翻訳してください。"
     }
 }
