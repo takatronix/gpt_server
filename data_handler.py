@@ -15,6 +15,8 @@ recognizer = SpeechRecognizer(config, config.recognizer)
 synthesizer = VoiceSynthesizer(config, config.voice_synthesizer)
 ai = OpenAIWrapper(config.openai_api_key)
 
+send_audio = False
+
 
 class DataHandler:
     def __init__(self, websocket: WebSocket):
@@ -39,14 +41,15 @@ class DataHandler:
                 ai.add_history("user", text)
                 ai.add_history("system", result)
 
+            filepath = ""
+            if send_audio:
                 # 音声データを作成
                 filepath = await self.text_to_audio(result)
                 # 音声データを送信
                 with open(filepath, "rb") as file:
                     await self.send_audio(file.read())
-
                 # 音声データを削除
-                #os.remove(filepath)
+                os.remove(filepath)
 
         except Exception as e:
             print(e)
@@ -84,7 +87,14 @@ class DataHandler:
         print("Received JSON data" + str(data))
         # JSONデータの処理
         response = json.dumps({"processed": data})
-        await self.send_json(response)
+
+        # jsonから "speaker" : true があれば、音声データを作成
+        if "speaker" in data:
+            if data["speaker"]:
+                send_audio = True
+            else:
+                send_audio = False
+        await self.send_text(response)
 
     async def handle_image(self, image_data: bytes):
         print("Received image data")

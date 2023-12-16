@@ -185,10 +185,21 @@ function sendMessage(message) {
     }
 }
 
+function sendSpeakerSetting(isOn) {
+    if (socket && socket.readyState === WebSocket.OPEN) {
+        // messageをjsonに変換
+        socket.send("json");
+        socket.send(JSON.stringify({speaker:isOn}));
+    } else {
+        console.error("WebSocket is not open. Data not sent.");
+    }
+
+}
+
 function sendJSON(data) {
     if (socket && socket.readyState === WebSocket.OPEN) {
         // データタイプを送信
-        socket.send("message");
+        socket.send("json");
         // JSONデータを送信
         socket.send(JSON.stringify(data));
     } else {
@@ -486,6 +497,7 @@ function set_speaker(isOn) {
         speakerButton.style.opacity = '0.5';
     }
     isSpeakerOn = isOn;
+    sendSpeakerSetting(isOn);
 }
 function set_burger(isOn) {
     let burgerButton = document.getElementById('burger-button');

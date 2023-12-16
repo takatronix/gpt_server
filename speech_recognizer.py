@@ -101,7 +101,10 @@ class SpeechRecognizer:
         if self.config.faster_whisper_model is None:
             segments, info = self.model.transcribe(wav_file, beam_size=5)
         else:
-            segments, info = self.model.transcribe(wav_file, beam_size=5, language=self.config.faster_whisper_target_language)
+            if self.config.faster_whisper_target_language == "":
+                segments, info = self.model.transcribe(wav_file, beam_size=5)
+            else:
+                segments, info = self.model.transcribe(wav_file, beam_size=5, language=self.config.faster_whisper_target_language)
 
         text = ""
         for segment in segments:

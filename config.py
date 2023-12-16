@@ -5,12 +5,13 @@ class Config:
     use_ssl = False  # SSLを使用するかどうか
 
     # SSL設定
-    ssl_certfile = "/path/to/certfile.crt"  # SSL証明書のパス
-    ssl_keyfile = "/path/to/keyfile.key"  # SSLキーファイルのパス
+
+    ssl_keyfile = ""
+    ssl_certfile = ""
 
     # その他の設定
     device = "cuda"  # 使用するデバイス
-    openai_api_key = "api key"
+    openai_api_key = "key"
 
     ai_key = "test"  # 使用するAIの種類
 
@@ -27,4 +28,5 @@ class Config:
     whisper_target_lang = "ja-JP"
     # faster-whisperのモデル
     faster_whisper_model = "flyingleafe/faster-whisper-large-v3"
-    faster_whisper_target_language = "ja"
+    faster_whisper_target_language = ""
+
