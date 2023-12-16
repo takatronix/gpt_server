@@ -4,15 +4,13 @@ class Config:
     port = 9090  # サーバーのポート
     use_ssl = False  # SSLを使用するかどうか
 
-    # SSL設定
-
-    ssl_keyfile = ""
-    ssl_certfile = ""
+    # credentials
+    ssl_certfile = "cert.pem"
+    ssl_keyfile = "privkey.pem"
+    openai_api_key = "openai_api_key"
 
     # その他の設定
     device = "cuda"  # 使用するデバイス
-    openai_api_key = "key"
-
     ai_key = "test"  # 使用するAIの種類
 
 
@@ -28,5 +26,5 @@ class Config:
     whisper_target_lang = "ja-JP"
     # faster-whisperのモデル
     faster_whisper_model = "flyingleafe/faster-whisper-large-v3"
-    faster_whisper_target_language = ""
+    faster_whisper_target_language = "ja"
 
