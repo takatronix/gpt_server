@@ -25,10 +25,7 @@ class DataHandler:
     # テキストデータの処理
     async def text_proc(self, text: str):
         # テキストデータを音声データに変換
-
         try:
-
-            # gpt3でテキストを変換
             if text == "":
                 return
 

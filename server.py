@@ -2,15 +2,12 @@ import json
 import os
 import shutil
 from typing import Union
-
 import uvicorn
 from fastapi import FastAPI, WebSocket, UploadFile, File, HTTPException
-
 from config import Config
 from data_handler import DataHandler
 
 app = FastAPI()
-
 
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
@@ -56,9 +53,7 @@ async def send_data(websocket: WebSocket, data: Union[str, bytes]):
     else:
         raise HTTPException(status_code=400, detail="Invalid data type")
 
-
 if __name__ == "__main__":
-
     # audioフォルダを削除して作成
     shutil.rmtree("audio")
     os.makedirs("audio", exist_ok=True)
