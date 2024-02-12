@@ -16,7 +16,7 @@
         "temperature": 0.5
     },
     "gpt4-turbo": {
-        "engine": "gpt-4-1106-preview",
+        "engine": "gpt-4-1158-preview",
         "max_history": 100,
         "max_tokens": 200,
         "temperature": 0.5
@@ -46,6 +46,6 @@
         "max_history": 1,
         "max_tokens": 200,
         "temperature": 0.1,
-        "custom_instructions": "通訳になってください。私が話すメッセージを日本語に翻訳してください。"
+        "custom_instructions": "Do not reply to the messages I speak, just translate them into Japanese."
     }
 }

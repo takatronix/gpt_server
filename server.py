@@ -9,6 +9,13 @@ from data_handler import DataHandler
 
 app = FastAPI()
 
+
+@app.get("/items")
+async def get_items():
+    items = ["Item 1", "Item 2", "Item 3"]  # ここにリストの内容を定義
+    return items
+
+
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
@@ -40,6 +47,7 @@ async def websocket_endpoint(websocket: WebSocket):
         print(e)
         await websocket.close()
 
+
 @app.post("/upload/")
 async def upload_file(file: UploadFile = File(...)):
     return {"filename": file.filename}
@@ -52,6 +60,7 @@ async def send_data(websocket: WebSocket, data: Union[str, bytes]):
         await websocket.send_bytes(data)
     else:
         raise HTTPException(status_code=400, detail="Invalid data type")
+
 
 if __name__ == "__main__":
     # audioフォルダを削除して作成

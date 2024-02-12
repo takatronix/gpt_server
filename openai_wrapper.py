@@ -1,4 +1,5 @@
 import json
+import os
 import time
 
 import requests
@@ -8,6 +9,8 @@ from openai import OpenAI
 
 class OpenAIWrapper:
     def __init__(self, api_key, config_file="openai_wrapper.json"):
+
+        os.environ["OPENAI_API_KEY"] = api_key
         self.api_key = api_key
         self.config_file = config_file
         self.client = OpenAI()
